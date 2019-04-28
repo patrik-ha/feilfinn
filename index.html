@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Feilfinn</title>
+        <link rel="stylesheet" href="stylesheet.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="scripts/generating/nearbyLetters.js"></script>    
+        <script src="scripts/generating/misspelling.js"></script>
+        <script src="scripts/generating/combining.js"></script>
+        <script src="scripts/elements/elements.js"></script>
+        <script src="scripts/elements/front.js"></script>
+        <script src="scripts/formatting/formatting.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md">
+                    <h1>Hva er dette?</h1>
+                    <p>
+                        Dette er en side som genererer søkefraser for bruk på finn.no.
+                    </p>
+                    <p>
+                        Denne siden genererer:
+                    </p>
+                    <ul>
+                        <li>Spørringer som kombinerer søk etter flere ord samtidig</li>
+                        <li>Spørringer som søker etter flere vanlige feilstavinger for en gitt frase</li>
+                    </ul>
+                    <p>
+                        Man skriver inn en frase, og får en spørring man deretter kan bruke i diverse søkefelt på finn.no.
+                    </p>
+                    <p>
+                        Disse spørringene fungerer <b>ikke</b> på hjemmesiden, <a target="_blank" href="https://www.finn.no/bap/browse.html">men kan brukes fra "torget".</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row mb">
+                <div class="col-md">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Vanlige stavefeil: </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb">
+                                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                                    <label for="user-misspelling-query"><b>Frase (tre tegn eller mer)</b></label>
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-md">
+                                                <div class="input-group input-group-lg">
+                                                    <input oninput="updateMisspellingQuery()" type="text" class="form-control" id="user-misspelling-query">                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md">
+                                                <div class="row">
+                                                    <div class="col-md">
+                                                        <input id="enableNearby" onchange="updateMisspellingQuery()" checked="checked" name="enableNearby" type="checkbox">  
+                                                        <label for="enableNearby"><i>Nærliggende tastefeil på tastatur ('i' &rarr; 'u', 'k', eller 'o')</i></label> 
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md">
+                                                        <input id="enableRemoveSingle" onchange="updateMisspellingQuery()" checked="checked" name="enableRemoveSingle" type="checkbox">                                                                                                                                              
+                                                        <label for="enableRemoveSingle"><i>Fjerning av én bokstav ("Abc" &rarr; "bc", "Ac", "Ab")</i></label> 
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md">
+                                                        <input id="enableSwap" onchange="updateMisspellingQuery()" checked="checked" name="enableSwap" type="checkbox">                                                                                                                                              
+                                                        <label for="enableSwap"><i>Bytte rekkefølge på to bokstaver ("Abc" &rarr; "Bac", "Acb")</i></label> 
+                                                    </div>
+                                                </div>                                                                                        
+                                            </div>
+                                        </div>
+                                    </div>                    
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="row">
+                                        <div class="col-md">
+                                            <label for="output-misspelling-query"><b>Spørring</b></label>
+                                            <div class="input-group">
+                                                <textarea readonly rows="4" class="form-control" id="output-misspelling-query"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md">
+                                            <button id="misspelling-copy-btn" 
+                                                    onclick="copyToClipboard('output-misspelling-query', 'misspelling-copy-btn')" 
+                                                    class="btn btn-primary btn-animated float-right smt">Kopier til utklippstavle</button>   
+                                        </div>
+                                    </div>   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb">
+                <div class="col-md">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Kombinerte uttrykk:</h3>      
+                            <p>(Søk på mer enn én ting om gangen)</p>    
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                                    <label for="user-combo-query"><b>Frase (separer elementer med komma)</b></label>
+                                    <div class="input-group input-group-lg">
+                                        <input oninput="updateComboQuery()" type="text" class="form-control" id="user-combo-query">
+                                    </div>                     
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                                    <label for="output-combo-query"><b>Spørring</b></label>
+                                    <div class="input-group">
+                                        <textarea readonly rows="4" class="form-control" id="output-combo-query"></textarea>
+                                    </div>
+                                    <button id="combo-copy-btn"
+                                            onclick="copyToClipboard('output-combo-query', 'combo-copy-btn')" 
+                                            class="btn btn-primary float-right smt">Kopier til utklippstavle</button>                     
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md">
+                    <h3>Info:</h3>
+                    <p>Når man bruker feilstavingsmodulen er det viktig å huske at man lett kan få noen falske treff når man gjør om på ordet.</p>
+                    <p>Da kan det være lurt å kun bruke noen av alternativene om gangen for å se hvor relevante treffene er.</p>
+                    <p>Man kan også få problemer når søkefrasen blir veldig lang.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,14 @@
+#main-title {
+    font-size: 60px;
+}
+.btn-animated{
+    animation: button-fade 1000ms ease;
+}
+
+.mb {
+    margin-bottom: 10px;
+}
+
+.smt {
+    margin-top: 5px;
+}
